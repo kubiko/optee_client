@@ -439,6 +439,7 @@ static int open_dev(const char *devname, uint32_t *gen_caps)
 {
 	int fd = 0;
 	struct tee_ioctl_version_data vers;
+	const char* optee_env;
 
 	memset(&vers, 0, sizeof(vers));
 
@@ -453,7 +454,12 @@ static int open_dev(const char *devname, uint32_t *gen_caps)
 	if (vers.impl_id != TEE_IMPL_ID_OPTEE)
 		goto err;
 
-	ta_dir = "optee_armtz";
+	optee_env = getenv("OPTEE_LIB");
+	if(optee_env){
+		ta_dir = optee_env;
+	} else {
+		ta_dir = "optee_armtz";
+	}
 	if (gen_caps)
 		*gen_caps = vers.gen_caps;
 

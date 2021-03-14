@@ -120,8 +120,13 @@ static int tee_supp_fs_init(void)
 {
 	size_t n = 0;
 	mode_t mode = 0700;
+	const char* fs_parent_path;
+	fs_parent_path = getenv("OPTEE_FS_PARENT_PATH");
+	if (fs_parent_path)
+		n = snprintf(tee_fs_root, sizeof(tee_fs_root), "%s/", fs_parent_path);
+	else
+		n = snprintf(tee_fs_root, sizeof(tee_fs_root), "%s/", TEE_FS_PARENT_PATH);
 
-	n = snprintf(tee_fs_root, sizeof(tee_fs_root), "%s/", TEE_FS_PARENT_PATH);
 	if (n >= sizeof(tee_fs_root))
 		return -1;
 

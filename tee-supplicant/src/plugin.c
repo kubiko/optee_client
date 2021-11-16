@@ -112,8 +112,15 @@ TEEC_Result plugin_load_all(void)
 	enum plugin_err res = PLUGIN_OK;
 	TEEC_Result teec_res = TEEC_SUCCESS;
 	struct dirent *entry = NULL;
+	const char* plugin_load_path = NULL;
 
-	dir = opendir(TEE_PLUGIN_LOAD_PATH);
+	plugin_load_path = getenv("OPTEE_PLUGIN_LOAD_PATH");
+	if(plugin_load_path){
+		dir = opendir(plugin_load_path);
+	} else {
+		dir = opendir(TEE_PLUGIN_LOAD_PATH);
+	}
+
 	if (!dir) {
 		IMSG("could not open directory %s", TEE_PLUGIN_LOAD_PATH);
 
